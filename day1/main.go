@@ -36,18 +36,25 @@ func main() {
 
 	sort.Ints(entries)
 
-	// for each entry
 	for i, entry := range entries {
 		var searchSpace []int
 
 		if entry+entry >= 2020 {
+			// for large entries, we don't have to search the whole array
 			searchSpace = entries[:i]
 		} else {
-			searchSpace = entries[i+1:]
+			// can probably optimize this, not sure how
+			searchSpace = entries
 		}
 
 		for _, compare := range searchSpace {
+			// when we know the first two values, we can compute the "target" for the third
+			// and then do a binary search for it
 			target := 2020 - entry - compare
+
+			if target < 1 {
+				break
+			}
 
 			min := 0
 			max := len(entries)
