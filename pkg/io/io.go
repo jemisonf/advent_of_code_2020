@@ -2,6 +2,7 @@ package io
 
 import (
 	"bufio"
+	"io/ioutil"
 	"os"
 )
 
@@ -21,4 +22,14 @@ func ReadFileAsLines(fileName string) ([]string, error) {
 	}
 
 	return entries, nil
+}
+
+func ReadFileAsString(fileName string) (string, error) {
+	contents, err := ioutil.ReadFile(fileName)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(contents), nil
 }
