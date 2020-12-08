@@ -186,7 +186,7 @@ func main() {
 	}
 
 	validPassports := 0
-	for _, passport := range passports {
+	for index, passport := range passports {
 		valid := false
 
 		if arguments.Part == 1 {
@@ -200,7 +200,10 @@ func main() {
 		}
 
 		if valid {
+			fmt.Println("valid ", index)
 			validPassports++
+		} else {
+			fmt.Println("invalid ", index)
 		}
 	}
 
