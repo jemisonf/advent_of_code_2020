@@ -73,9 +73,6 @@ func HandleParsedLine(rule parser.LuggageRule) (Node, []Edge) {
 
 func CanCarry(bagID string, g Graph) []string {
 	ids := map[string]bool{}
-	fmt.Println("----------------------------------------")
-	fmt.Println(bagID)
-
 	for _, e := range g.Edges {
 		if e.InnerNodeID == bagID {
 			ids[e.OuterNodeID] = true
