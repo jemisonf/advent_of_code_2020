@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/jemisonf/advent_of_code_2020/day7/parser"
 	"github.com/jemisonf/advent_of_code_2020/pkg/args"
@@ -72,6 +73,8 @@ func HandleParsedLine(rule parser.LuggageRule) (Node, []Edge) {
 
 func CanCarry(bagID string, g Graph) []string {
 	ids := map[string]bool{}
+	fmt.Println("----------------------------------------")
+	fmt.Println(bagID)
 
 	for _, e := range g.Edges {
 		if e.InnerNodeID == bagID {
@@ -86,7 +89,7 @@ func CanCarry(bagID string, g Graph) []string {
 		}
 	}
 
-	keys := make([]string, len(ids))
+	keys := []string{}
 	for id := range ids {
 		keys = append(keys, id)
 	}
@@ -113,6 +116,19 @@ func BuildGraph(lines []string) Graph {
 	return g
 }
 
+func CarryCount(color string, g Graph) int {
+	totalCount := 0
+
+	for _, e := range g.Edges {
+		if e.OuterNodeID == color {
+			count := CarryCount(e.InnerNodeID, g)
+			totalCount += count*e.Count + e.Count
+		}
+	}
+
+	return totalCount
+}
+
 func main() {
 	arguments := args.ParseArgs()
 
@@ -123,5 +139,12 @@ func main() {
 	}
 
 	g := BuildGraph(lines)
-	fmt.Printf("Valid bag colors: %d\n", len(CanCarry("shiny gold", g)))
+
+	if arguments.Part == 1 {
+		colors := CanCarry("shiny gold", g)
+		fmt.Printf("Valid bag colors: %d\n", len(colors))
+		os.Exit(0)
+	}
+
+	fmt.Printf("bag must contain %d other bags\n", CarryCount("shiny gold", g))
 }
