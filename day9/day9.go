@@ -8,7 +8,7 @@ import (
 	"github.com/jemisonf/advent_of_code_2020/pkg/io"
 )
 
-func FindValidNums(nums []int, preambleSize int) []int {
+func FindInvalidNums(nums []int, preambleSize int) []int {
 	badNums := []int{}
 	for index, num := range nums[preambleSize:] {
 		found := false
@@ -29,12 +29,16 @@ func FindValidNums(nums []int, preambleSize int) []int {
 }
 
 func FindContiguousSum(nums []int, target int) []int {
-	for index := range nums {
-		sum := 0
+	for index, num := range nums {
+		if num == target {
+			continue
+		}
+
+		sum := nums[index]
 		originalIndex := index
-		for sum <= target {
-			sum += nums[index]
+		for sum < target {
 			index++
+			sum += nums[index]
 		}
 
 		if sum == target {
@@ -48,16 +52,32 @@ func FindContiguousSum(nums []int, target int) []int {
 func main() {
 	arguments := args.ParseArgs()
 
+	if arguments.Number == 0 {
+		arguments.Number = 25
+	}
+
 	nums, err := io.ReadFileAsInts(arguments.File)
 
 	if err != nil {
 		log.Fatalf("error parsing file: %v", err)
 	}
 
-	badNums := FindValidNums(nums, 25)
+	badNums := FindInvalidNums(nums, arguments.Number)
 
 	fmt.Println(badNums)
 
 	p2Nums := FindContiguousSum(nums, badNums[0])
-	fmt.Println(p2Nums)
+	smallest, largest := 10000000000000, 0
+
+	for _, num := range p2Nums {
+		if num <= smallest {
+			smallest = num
+		}
+
+		if num >= largest {
+			largest = num
+		}
+	}
+
+	fmt.Printf("encryption weakness: %d\n", smallest+largest)
 }

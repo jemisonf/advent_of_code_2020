@@ -5,13 +5,15 @@ import (
 )
 
 type Args struct {
-	File string
-	Part int
+	File   string
+	Part   int
+	Number int
 }
 
 var (
 	args *Args
 	part = flag.Int("part", 1, "which part to run")
+	num  = flag.Int("n", 0, "a number param")
 )
 
 func ParseArgs() Args {
@@ -21,8 +23,9 @@ func ParseArgs() Args {
 
 	flag.Parse()
 	args := &Args{
-		File: flag.Arg(0),
-		Part: *part,
+		File:   flag.Arg(0),
+		Part:   *part,
+		Number: *num,
 	}
 
 	return *args
