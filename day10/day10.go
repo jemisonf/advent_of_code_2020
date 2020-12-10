@@ -75,10 +75,30 @@ func ComputeArrangements(adapters []int) [][]int {
 	return maxAdapterArrangements
 }
 
+func OptimizedComputeArrangements(adapters []int) int {
+	arrangements := map[int]int{}
+
+	arrangements[0] = 1
+
+	for _, adapter := range adapters {
+		arrangements[adapter] += arrangements[adapter-1]
+		arrangements[adapter] += arrangements[adapter-2]
+		arrangements[adapter] += arrangements[adapter-3]
+	}
+
+	maxAdapter := adapters[len(adapters)-1] + 3
+	maxAdapterArrangements := arrangements[maxAdapter-1]
+	maxAdapterArrangements += arrangements[maxAdapter-2]
+	maxAdapterArrangements += arrangements[maxAdapter-3]
+
+	return maxAdapterArrangements
+}
+
 func main() {
 	go func() {
 		log.Println(http.ListenAndServe("localhost:6060", nil))
 	}()
+
 	arguments := args.ParseArgs()
 
 	adapters, err := io.ReadFileAsInts(arguments.File)
@@ -95,6 +115,6 @@ func main() {
 		os.Exit(0)
 	}
 
-	fmt.Printf("number of arrangements: %d\n", len(ComputeArrangements(adapters)))
+	fmt.Printf("number of arrangements: %d\n", OptimizedComputeArrangements(adapters))
 
 }
