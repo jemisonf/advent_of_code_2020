@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 	"strconv"
+
+	"github.com/jemisonf/advent_of_code_2020/pkg/args"
 )
 
 func ReadFileAsLines(fileName string) ([]string, error) {
@@ -55,4 +57,14 @@ func ReadFileAsString(fileName string) (string, error) {
 	}
 
 	return string(contents), nil
+}
+
+// WaitForKey waits for a single keypress unless the user passes `-t=false`
+func WaitForKey() {
+	t := args.ParseArgs().Tick
+	if t {
+		var b = make([]byte, 1)
+
+		os.Stdin.Read(b)
+	}
 }
